@@ -13,6 +13,9 @@ def process_emg(emg):
     dataRecollectedPerIteration += emg
     global samplesPerSeconds
     samplesPerSeconds += 1
+
+def saving_recording():
+  f.write(dataRecollectedPerIteration)
 #-------------------------------------------------------------------------------
 
 if __name__ == "__main__":
@@ -28,6 +31,8 @@ if __name__ == "__main__":
   myo_device.services.set_mode(myo.EmgMode.FILT, myo.ImuMode.OFF, myo.ClassifierMode.OFF)
   iterations = int(input("insert the number of iterations: "))
   samplesPerGesture = int(input("insert number of samplesPerGesture: "))
+  nameOfGesture = input("insert name of the the gesture")
+  global f = open(nameOfGesture,"w")
   myo_device.services.vibrate(1) # short vibration to let user know we are recording
   time.sleep(2) #add some delay to avoid the vibration causing any interference
   myo_device.add_emg_event_handler(process_emg)
@@ -44,3 +49,4 @@ if __name__ == "__main__":
     myo_device.services.vibrate(1) # short vibration to let user know we are recording
     time.sleep(2) #add some delay to avoid the vibration causing any interference
   print (dataRecollectedPerIteration)
+  saving_recording()
