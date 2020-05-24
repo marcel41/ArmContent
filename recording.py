@@ -32,7 +32,7 @@ if __name__ == "__main__":
   iterations = int(input("insert the number of iterations: "))
   samplesPerGesture = int(input("insert number of samplesPerGesture: "))
   nameOfGesture = input("insert name of the the gesture")
-  global f = open(nameOfGesture,"w")
+  f = open(nameOfGesture,"w")
   myo_device.services.vibrate(1) # short vibration to let user know we are recording
   time.sleep(2) #add some delay to avoid the vibration causing any interference
   myo_device.add_emg_event_handler(process_emg)
