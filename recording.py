@@ -27,7 +27,8 @@ if __name__ == "__main__":
   myo_device.services.set_mode(myo.EmgMode.FILT, myo.ImuMode.OFF, myo.ClassifierMode.OFF)
   iterations = int(input("insert the number of iterations: "))
   samplesPerGesture = int(input("insert number of samplesPerGesture: "))
-  time.sleep(2)
+  myo_device.services.vibrate(1) # short vibration to let user know we are recording
+  time.sleep(2) #add some delay to avoid the vibration causing any interference
   myo_device.add_emg_event_handler(process_emg)
   for i in range(iterations):
     isReadyToRegisterData = True
@@ -39,4 +40,5 @@ if __name__ == "__main__":
     isReadyToRegisterData = False
     print("total number of samples: ", samplesPerSeconds)
     samplesPerSeconds = 0;
-    time.sleep(2)
+    myo_device.services.vibrate(1) # short vibration to let user know we are recording
+    time.sleep(2) #add some delay to avoid the vibration causing any interference
