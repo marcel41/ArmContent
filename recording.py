@@ -24,10 +24,10 @@ if __name__ == "__main__":
 
 
 
-  iterations = int(input("insert the number of iterations: "))
-  samplesPerGesture = int(input("insert number of samplesPerGesture"))
-  time.sleep(2)
   myo_device.services.set_mode(myo.EmgMode.FILT, myo.ImuMode.OFF, myo.ClassifierMode.OFF)
+  iterations = int(input("insert the number of iterations: "))
+  samplesPerGesture = int(input("insert number of samplesPerGesture: "))
+  time.sleep(2)
   myo_device.add_emg_event_handler(process_emg)
   for i in range(iterations):
     while(samplesPerSeconds <= samplesPerGesture):
