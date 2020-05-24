@@ -30,6 +30,7 @@ if __name__ == "__main__":
   time.sleep(2)
   myo_device.add_emg_event_handler(process_emg)
   for i in range(iterations):
+    isReadyToRegisterData = True
     while(samplesPerSeconds <= samplesPerGesture):
       if myo_device.services.waitForNotifications(1):
         continue #return to the beggining of while loop
