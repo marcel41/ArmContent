@@ -34,7 +34,7 @@ if __name__ == "__main__":
         continue #return to the beggining of while loop
       else:
         print("no data has been received from the peripheral, waiting...")
+    isReadyToRegisterData = False
     print("total number of samples: ", samplesPerSeconds)
     samplesPerSeconds = 0;
-    isReadyToRegisterData = False
     time.sleep(2)
