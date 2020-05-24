@@ -22,10 +22,12 @@ if __name__ == "__main__":
   myo_device.services.emg_filt_notifications()
   print("Battery: %d" % myo_device.services.battery())
   myo_device.services.set_mode(myo.EmgMode.FILT, myo.ImuMode.OFF, myo.ClassifierMode.OFF)
-  myo_device.add_emg_event_handler(process_emg)
+
 
   iterations = int(input("insert the number of iterations: "))
   timeHoldingGesture = int(input("how many seconds will you  hold the gesture: "))
+
+  myo_device.add_emg_event_handler(process_emg)
   for i in range(iterations):
     starting_time = time.time()
     isReadyToRegisterData = True
