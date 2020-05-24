@@ -26,7 +26,8 @@ if __name__ == "__main__":
 
   iterations = int(input("insert the number of iterations: "))
   timeHoldingGesture = int(input("how many seconds will you  hold the gesture: "))
-
+  samplesPerGesture = int(input("insert number of samplesPerGesture"))
+  time.sleep(2)
   myo_device.add_emg_event_handler(process_emg)
   for i in range(iterations):
     starting_time = time.time()
