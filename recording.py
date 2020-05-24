@@ -6,12 +6,14 @@ samplesPerSeconds = 0
 #def section
 #-------------------------------------------------------------------------------
 def process_emg(emg):
+  global samplesPerSeconds
   if(isReadyToRegisterData):
     print("readings -> ", emg)
     samplesPerSeconds += 1
 #-------------------------------------------------------------------------------
 
 if __name__ == "__main__":
+  global samplesPerSeconds
   myo_mac_addr = myo.get_myo()
   myo_device = myo.Device()
   myo_device.services.sleep_mode(1)  # never sleep
