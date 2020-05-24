@@ -3,18 +3,19 @@ import time
 #global variable
 isReadyToRegisterData = False
 samplesPerSeconds = 0
+dataRecollectedPerIteration = list()
 #def section
 #-------------------------------------------------------------------------------
 def process_emg(emg):
   if(isReadyToRegisterData):
     print("readings-> ", emg)
-    print("reading0->", emg[0])
+    global dataRecollectedPerIteration
+    dataRecollectedPerIteration += emg
     global samplesPerSeconds
     samplesPerSeconds += 1
 #-------------------------------------------------------------------------------
 
 if __name__ == "__main__":
-  data_recollected = list()
   myo_mac_addr = myo.get_myo()
   myo_device = myo.Device()
   myo_device.services.sleep_mode(1)  # never sleep
@@ -32,7 +33,7 @@ if __name__ == "__main__":
   myo_device.add_emg_event_handler(process_emg)
   for i in range(iterations):
     isReadyToRegisterData = True
-    while(samplesPerSeconds <= samplesPerGesture):
+    while(samplesPerSeconds < samplesPerGesture):
       if myo_device.services.waitForNotifications(1):
         continue #return to the beggining of while loop
       else:
@@ -42,3 +43,4 @@ if __name__ == "__main__":
     samplesPerSeconds = 0;
     myo_device.services.vibrate(1) # short vibration to let user know we are recording
     time.sleep(2) #add some delay to avoid the vibration causing any interference
+  print dataRecollectedPerIteration
