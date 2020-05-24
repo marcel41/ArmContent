@@ -22,7 +22,7 @@ if __name__ == "__main__":
   iterations = int(input("insert the number of iterations"))
   timeHoldingGesture = int(input("how many seconds will you  hold the gesture"))
   for i in range(iterations):
-    starting_time = time.time() - start
+    starting_time = time.time()
     isReadyToRegisterData = True
     while(round(time.time() - starting_time,1) <= timeHoldingGesture):
       if myo_device.services.waitForNotifications(1):
