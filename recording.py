@@ -4,7 +4,7 @@ import time
 isReadyToRegisterData = False
 samplesPerSeconds = 0
 dataRecollectedPerIteration = list()
-#def section 
+#def section
 #-------------------------------------------------------------------------------
 def process_emg(emg):
   if(isReadyToRegisterData):
@@ -32,8 +32,8 @@ if __name__ == "__main__":
   myo_device.services.set_mode(myo.EmgMode.FILT, myo.ImuMode.OFF, myo.ClassifierMode.OFF)
   iterations = int(input("insert the number of iterations: "))
   samplesPerGesture = int(input("insert number of samplesPerGesture: "))
-  nameOfGesture = input("insert name of the the gesture")
-  f = open(nameOfGesture,"w")
+  nameOfGesture = input("insert name of the the gesture:")
+  f = open(nameOfGesture + ".txt","w")
   myo_device.services.vibrate(1) # short vibration to let user know we are recording
   time.sleep(2) #add some delay to avoid the vibration causing any interference
   myo_device.add_emg_event_handler(process_emg)
