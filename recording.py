@@ -11,7 +11,7 @@ if __name__ == "__main__":
   myo_device = myo.Device()
   myo_device.services.sleep_mode(1)  # never sleep
   myo_device.services.vibrate(1) #short vibration
-  myo_device.services.eme_filt_notifications()
+  myo_device.services.emg_filt_notifications()
   print("Battery: %d" % myo_device.services.battery)
   myo_device.services.set_mode(myo.EmgMode.FILT, myo.ImuMode.OFF, myo.ClassifierMode.OFF)
   myo_device.add_emg_event_handler(process_emg)
