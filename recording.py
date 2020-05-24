@@ -4,7 +4,7 @@ import time
 isReadyToRegisterData = False
 samplesPerSeconds = 0
 dataRecollectedPerIteration = list()
-#def section
+#def section 
 #-------------------------------------------------------------------------------
 def process_emg(emg):
   if(isReadyToRegisterData):
