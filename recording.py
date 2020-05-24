@@ -15,7 +15,7 @@ def process_emg(emg):
     samplesPerSeconds += 1
 
 def saving_recording():
-  f.write(dataRecollectedPerIteration)
+  f.write(str(dataRecollectedPerIteration))
 #-------------------------------------------------------------------------------
 
 if __name__ == "__main__":
@@ -44,9 +44,11 @@ if __name__ == "__main__":
       else:
         print("no data has been received from the peripheral, waiting...")
     isReadyToRegisterData = False
+    dataRecollectedPerIteration.clear()
+    saving_recording()
     print("total number of samples: ", samplesPerSeconds)
     samplesPerSeconds = 0;
     myo_device.services.vibrate(1) # short vibration to let user know we are recording
     time.sleep(2) #add some delay to avoid the vibration causing any interference
   print (dataRecollectedPerIteration)
-  saving_recording()
+  #saving_recording()
