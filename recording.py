@@ -1,9 +1,12 @@
 import open_myo as myo
-
+import time
+#global variable
+isReadyToRegisterData = False
 #def section
 #-------------------------------------------------------------------------------
 def process_emg(emg):
-  print("readings -> ", emg)
+  if(isReadyToRegisterData):
+    print("readings -> ", emg)
 #-------------------------------------------------------------------------------
 
 if __name__ == "__main__":
@@ -15,7 +18,16 @@ if __name__ == "__main__":
   print("Battery: %d" % myo_device.services.battery())
   myo_device.services.set_mode(myo.EmgMode.FILT, myo.ImuMode.OFF, myo.ClassifierMode.OFF)
   myo_device.add_emg_event_handler(process_emg)
-  while True:
-    if myo_device.services.waitForNotifications(1):
-      continue #return to the beggining of while loop
-    print("no data has been received from the peripheral, waiting...")
+
+  iterations = int(input("insert the number of iterations"))
+  timeHoldingGesture = int(input("how many seconds will you  hold the gesture"))
+  for i in range(iterations):
+    starting_time = time.time() - start
+    isReadyToRegisterData = True
+    while(round(time.time() - starting_time,1) <= timeHoldingGesture):
+      if myo_device.services.waitForNotifications(1):
+        continue #return to the beggining of while loop
+      else:
+        print("no data has been received from the peripheral, waiting...")
+    isReadyToRegisterData = False
+    time.sleep(2)
