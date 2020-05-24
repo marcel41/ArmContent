@@ -21,18 +21,16 @@ if __name__ == "__main__":
   myo_device.services.vibrate(1) #short vibration
   myo_device.services.emg_filt_notifications()
   print("Battery: %d" % myo_device.services.battery())
-  myo_device.services.set_mode(myo.EmgMode.FILT, myo.ImuMode.OFF, myo.ClassifierMode.OFF)
+
 
 
   iterations = int(input("insert the number of iterations: "))
-  timeHoldingGesture = int(input("how many seconds will you  hold the gesture: "))
   samplesPerGesture = int(input("insert number of samplesPerGesture"))
   time.sleep(2)
+  myo_device.services.set_mode(myo.EmgMode.FILT, myo.ImuMode.OFF, myo.ClassifierMode.OFF)
   myo_device.add_emg_event_handler(process_emg)
   for i in range(iterations):
-    starting_time = time.time()
-    isReadyToRegisterData = True
-    while(round(time.time() - starting_time,1) <= timeHoldingGesture):
+    while(samplesPerSeconds <= samplesPerGesture):
       if myo_device.services.waitForNotifications(1):
         continue #return to the beggining of while loop
       else:
