@@ -43,4 +43,4 @@ if __name__ == "__main__":
     samplesPerSeconds = 0;
     myo_device.services.vibrate(1) # short vibration to let user know we are recording
     time.sleep(2) #add some delay to avoid the vibration causing any interference
-  print dataRecollectedPerIteration
+  print (dataRecollectedPerIteration)
