@@ -70,7 +70,7 @@ if __name__ == "__main__":
         np_array = np.asarray(myList[i])
         np_array_reshaped = np_array.reshape(totalSamples,8)
         np_examples[i] = np_array_reshaped
-
+      np_examples = tf.keras.utils.normalize(np_examples)
       y_label_Class = os.path.basename(fd.name)
       if(firstSample):
         data_x = np.copy(np_examples)
@@ -90,8 +90,8 @@ if __name__ == "__main__":
   #data_x = tf.keras.utils.normalize(data_x)
   print(data_x[9][1][:])
   print(data_x[19][1][:])
-  print(data_x[29][1][:])
-  print(data_x[39][1][:])
+  # print(data_x[29][1][:])
+  # print(data_x[39][1][:])
   samplesPerGesture = int(len(data_x)/len(gestureOrder))
   data_y = list()
   data_y_train = list()
@@ -109,12 +109,71 @@ if __name__ == "__main__":
   data_y = np.asarray(data_y)
   data_y_train = np.asarray(data_y_train)
   data_y_test = np.asarray(data_y_test)
-  print(data_x_test.shape)
-  print(data_x_train.shape)
-  print(data_x_train[7][0][:])
-  print(data_y_train.shape)
+  print(data_y_train)
+  EVALUATION_INTERVAL = 200
+  EPOCHS = 10
+  BATCH_SIZE = 256
+  BUFFER_SIZE = 10000
+
+
+  # data_y_train =  tf.keras.utils.normalize(data_y_train)
+  # print(data_y_train.shape)
+  # data_y_test =  tf.keras.utils.normalize(data_y_test)
+  # data_x_train =  tf.keras.utils.normalize(data_x_train)
+  # data_x_test =  tf.keras.utils.normalize(data_x_test)
+  train_data_single = tf.data.Dataset.from_tensor_slices((data_x_train, data_y_train))
+  train_data_single = train_data_single.cache().shuffle(BUFFER_SIZE).batch(BATCH_SIZE).repeat()
+
+  print(">",data_x_test.shape)
   print(data_y_test.shape)
-  print(data_x_test[0][0][:])
+  val_data_single = tf.data.Dataset.from_tensor_slices((data_x_test, data_y_test))
+  val_data_single = val_data_single.batch(BATCH_SIZE).repeat()
+
+  single_step_model = tf.keras.models.Sequential()
+  print(data_x_train.shape[-2:])
+  single_step_model.add(tf.keras.layers.LSTM(32,
+                                           input_shape=data_x_train.shape[-2:]))
+
+  data_y_train = tf.keras.utils.to_categorical(data_y_train)
+  data_y_test = tf.keras.utils.to_categorical(data_y_test)
+  print(data_y_train.shape[1])
+  #single_step_model.add(tf.keras.layers.Dense(8, input_dim=4, activation='relu'))
+  #single_step_model.add(Dropout(0.5))
+  # print(">", data_y_train.shape[0])
+  single_step_model.add(tf.keras.layers.Dense(100,activation='relu'))
+  single_step_model.add(tf.keras.layers.Dense(2,activation = 'softmax'))
+  single_step_model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+  single_step_model.fit(data_x_train, data_y_train, epochs=EPOCHS, batch_size=BATCH_SIZE, verbose=1)
+  _, accuracy = single_step_model.evaluate(data_x_test, data_y_test, batch_size=BATCH_SIZE, verbose=0)
+  print(data_x_test.shape)
+  #single_step_model.
+  print(single_step_model.predict_classes(data_x_test[:1]))
+  #single_step_model.add(tf.keras.layers.Dense(6,activation="softmax"))
+  #single_step_model.add(tf.keras.layers.Dense(1))
+
+  # single_step_model.compile(optimizer=tf.keras.optimizers.RMSprop(), loss='mae')
+  # #single_step_model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+  # #single_step_model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+  # for x, y in val_data_single.take(3):
+  #   print(single_step_model.predict(x).shape)
+  #   print(single_step_model.predict(x)[0])
+  # single_step_history = single_step_model.fit(train_data_single, epochs=EPOCHS,
+  #                                           steps_per_epoch=EVALUATION_INTERVAL,
+  #                                           validation_data=val_data_single,
+  #                                           validation_steps=50)
+  # #print(val_data_single.shape)
+  # for x, y in val_data_single.take(3):
+  #   print(single_step_model.predict(x)[0])
+  #   print(single_step_model.predict(x)[0].shape)
+    #print(x)
+    #print(single_step_model.predict_classes(x))
+
+  # print(data_x_test.shape)
+  # print(data_x_train.shape)
+  # print(data_x_train[7][0][:])
+  # print(data_y_train.shape)
+  # print(data_y_test.shape)
+  # print(data_x_test[0][0][:])
   #data_x_train = np.delete(data_x_train,[0],axis=0)
   #print(data_x_train.shape)
   #spittling data_x into different
