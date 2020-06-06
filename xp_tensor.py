@@ -151,15 +151,50 @@ if __name__ == "__main__":
   #single_step_model.
   print(single_step_model.predict_classes(data_x_test[:1]))
 
+  run_model = tf.function(lambda x: single_step_model(x))
+# This is important, let's fix the input size.
+  BATCH_SIZE = 1
+  STEPS = 150
+  INPUT_SIZE = 8
+  concrete_func = run_model.get_concrete_function(
+    tf.TensorSpec([BATCH_SIZE, STEPS, INPUT_SIZE], single_step_model.inputs[0].dtype))
+
+
   #Save the entire model
-  single_step_model.save("saved_model/my_model.h5")
+  #single_step_model.save("saved_model/my_model.h5,save_format='tf',signatures=concrete_func")
+  single_step_model.save("saved_model/my_modelXDXD",save_format='tf',signatures=concrete_func)
+ # single_step_model.save("saved_model/my_modelxd")
 
   #converter = tf.lite.TFLiteConverter.from_saved_model("saved_model/my_model")
-  converter = tf.lite.TFLiteConverter.from_keras_model(single_step_model)
+  #converter = tf.lite.TFLiteConverter.from_saved_model("saved_model/my_modelxd")
+  converter = tf.lite.TFLiteConverter.from_saved_model("saved_model/my_modelXDXD")
+  #converter = tf.lite.TFLiteConverter.from_keras_model(single_step_model)
+  #converter.allow_custom_ops=True
   tflite_model = converter.convert()
 
-  with tf.gfile.GFile('model.tflite','wb') as f:
+  #open('/home/marcel/ArmContent/modelXDXD.tflite','wb').write(tflite_model)
+  with tf.io.gfile.GFile('/ArmContent/modelXDXD.tflite','wb') as f:
     f.write(tflite_model)
+
+  print("FINISH")
+  expected = single_step_model.predict(data_x_test[:4])
+  print(expected)
+  # # Run the model with TensorFlow Lite
+  # interpreter = tf.lite.Interpreter(model_content=tflite_model)
+  # interpreter.allocate_tensors()
+  # input_details = interpreter.get_input_details()
+  # print(input_details)
+  # output_details = interpreter.get_output_details()
+  # print(data_x_test[1].shape)
+  #
+  # arrayXD = np.empty((1,150,8),dtype="float32")
+  #
+  # arrayXD = data_x_test[0]
+  # interpreter.set_tensor(input_details[0]["index"], arrayXD)
+  # result = interpreter.get_tensor(output_details[0]["index"])
+  # print(result)
+  # interpreter.invoke()
+
   #single_step_model.add(tf.keras.layers.Dense(6,activation="softmax"))
   #single_step_model.add(tf.keras.layers.Dense(1))
 
