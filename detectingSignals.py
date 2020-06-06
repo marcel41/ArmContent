@@ -1,12 +1,14 @@
 import numpy as np
 import tensorflow as tf
 import open_myo as myo
+from kulka import Kulka
 import time
 
 isReadyToRegisterData = False
 samplesPerSeconds = 0
 dataRecollectedPerIteration = list()
 
+ADDR = '68:86:e7:00:ef:40'
 #interpreter = tf.lite.Interpreter(model_path="myLittleModel.tflite")
 interpreter = tf.lite.Interpreter(model_path="modelXDXD.tflite")
 interpreter.allocate_tensors()
@@ -14,8 +16,26 @@ interpreter.allocate_tensors()
 # Get input and output tensors.
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
-#def section
+
+STEPS = 10
+SPEED = 0x30
+SLEEP_TIME = 0.3
+
+
+            #def section
 #-------------------------------------------------------------------------------
+def make_a_step(kulka, current_angle):
+  kulka.roll(SPEED, current_angle)
+  time.sleep(SLEEP_TIME)
+  kulka.roll(0, current_angle)
+
+def make_a_circle(kulka, steps):
+  rotate_by = 360 // steps
+  current_angle = 1
+
+  for _ in range(steps):
+    make_a_step(kulka, current_angle % 360)
+    current_angle += rotate_by
 def process_emg(emg):
   if(isReadyToRegisterData):
     print("readings-> ", emg)
@@ -37,7 +57,11 @@ def classifySignal():
   interpreter.invoke()
 
   output_data = interpreter.get_tensor(output_details[0]['index'])
-  print(output_data)
+  if(np.argmax(output_data) == 1):
+    with Kulka(ADDR) as kulka:
+      make_a_circle(kulka, STEPS)
+  else:
+    print("nothing")
 
 #-------------------------------------------------------------------------------
 if __name__ == "__main__":
