@@ -52,11 +52,15 @@ if __name__ == "__main__":
   data_y_test = None
   gestureOrder = list()
   gestureNum = 0
+  channelsEMG = 8
+  gesturesTotal = 0
+  numberOfStepsPerSample = 0
   myList = list()
   #my_gesture =
   for path in glob.glob(os.path.join(working_dir,"*.txt")):
     with io.open(path, mode="r", encoding="utf-8") as fd:
       np_array_reshaped = None
+      gesturesTotal +=1
       for line in fd:
         line = line[1:len(line)-2]
         line = line.replace(',','')
@@ -65,6 +69,7 @@ if __name__ == "__main__":
         myList.append(numLine)
       if(firstSample):
         totalSamples = int((len(myList[0])/8))
+        print("totalNumberOfExam", totalSamples)
         np_examples = np.empty((len(myList),totalSamples,8),int)
       for i in range(len(np_examples)):
         np_array = np.asarray(myList[i])
@@ -90,6 +95,7 @@ if __name__ == "__main__":
   #data_x = tf.keras.utils.normalize(data_x)
   print(data_x[9][1][:])
   print(data_x[19][1][:])
+  print("data extracted", data_x_train.shape)
   # print(data_x[29][1][:])
   # print(data_x[39][1][:])
   samplesPerGesture = int(len(data_x)/len(gestureOrder))
@@ -115,7 +121,9 @@ if __name__ == "__main__":
   BATCH_SIZE = 256
   BUFFER_SIZE = 10000
 
-
+  print("total number of gesture: ",gesturesTotal)
+  print("total number of steps: ",data_x_train[0].shape[0])
+  numberOfStepsPerSample = data_x_train[0].shape[0]
   # data_y_train =  tf.keras.utils.normalize(data_y_train)
   # print(data_y_train.shape)
   # data_y_test =  tf.keras.utils.normalize(data_y_test)
@@ -141,7 +149,7 @@ if __name__ == "__main__":
   #single_step_model.add(Dropout(0.5))
   # print(">", data_y_train.shape[0])
   single_step_model.add(tf.keras.layers.Dense(100,activation='relu'))
-  single_step_model.add(tf.keras.layers.Dense(2,activation = 'softmax'))
+  single_step_model.add(tf.keras.layers.Dense(gesturesTotal,activation = 'softmax'))
   single_step_model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 
@@ -154,7 +162,7 @@ if __name__ == "__main__":
   run_model = tf.function(lambda x: single_step_model(x))
 # This is important, let's fix the input size.
   BATCH_SIZE = 1
-  STEPS = 150
+  STEPS = numberOfStepsPerSample
   INPUT_SIZE = 8
   concrete_func = run_model.get_concrete_function(
     tf.TensorSpec([BATCH_SIZE, STEPS, INPUT_SIZE], single_step_model.inputs[0].dtype))
@@ -162,22 +170,22 @@ if __name__ == "__main__":
 
   #Save the entire model
   #single_step_model.save("saved_model/my_model.h5,save_format='tf',signatures=concrete_func")
-  single_step_model.save("saved_model/my_modelXDXD",save_format='tf',signatures=concrete_func)
+  single_step_model.save("saved_model/my_model2",save_format='tf',signatures=concrete_func)
  # single_step_model.save("saved_model/my_modelxd")
 
   #converter = tf.lite.TFLiteConverter.from_saved_model("saved_model/my_model")
   #converter = tf.lite.TFLiteConverter.from_saved_model("saved_model/my_modelxd")
-  converter = tf.lite.TFLiteConverter.from_saved_model("saved_model/my_modelXDXD")
+  converter = tf.lite.TFLiteConverter.from_saved_model("saved_model/my_model2")
   #converter = tf.lite.TFLiteConverter.from_keras_model(single_step_model)
   #converter.allow_custom_ops=True
   tflite_model = converter.convert()
 
   #open('/home/marcel/ArmContent/modelXDXD.tflite','wb').write(tflite_model)
-  with tf.io.gfile.GFile('/ArmContent/modelXDXD.tflite','wb') as f:
+  with tf.io.gfile.GFile('/home/marcel/ArmContent/model2.tflite','wb') as f:
     f.write(tflite_model)
 
   print("FINISH")
-  expected = single_step_model.predict(data_x_test[:4])
+  expected = single_step_model.predict(data_x_test[:40])
   print(expected)
   # # Run the model with TensorFlow Lite
   # interpreter = tf.lite.Interpreter(model_content=tflite_model)

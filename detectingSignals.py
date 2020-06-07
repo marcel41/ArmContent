@@ -10,7 +10,7 @@ dataRecollectedPerIteration = list()
 
 ADDR = '68:86:e7:00:ef:40'
 #interpreter = tf.lite.Interpreter(model_path="myLittleModel.tflite")
-interpreter = tf.lite.Interpreter(model_path="modelXDXD.tflite")
+interpreter = tf.lite.Interpreter(model_path="model2.tflite")
 interpreter.allocate_tensors()
 
 # Get input and output tensors.
@@ -57,11 +57,13 @@ def classifySignal():
   interpreter.invoke()
 
   output_data = interpreter.get_tensor(output_details[0]['index'])
-  if(np.argmax(output_data) == 1):
-    with Kulka(ADDR) as kulka:
-      make_a_circle(kulka, STEPS)
-  else:
-    print("nothing")
+  print(output_data)
+  print("the class is:", np.argmax(output_data))
+  # if(np.argmax(output_data) == 1):
+  #   with Kulka(ADDR) as kulka:
+  #     make_a_circle(kulka, STEPS)
+  # else:
+  #   print("nothing")
 
 #-------------------------------------------------------------------------------
 if __name__ == "__main__":
