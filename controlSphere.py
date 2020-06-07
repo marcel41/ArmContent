@@ -36,6 +36,35 @@ def make_a_circle(kulka, steps):
   for _ in range(steps):
     make_a_step(kulka, current_angle % 360)
     current_angle += rotate_by
+def make_it_dance(kulka):
+  speed = 0x88
+  sleep_time = 0.3
+
+  for angle in [1, 90, 180, 270]:
+      kulka.roll(speed, angle)
+      time.sleep(sleep_time)
+def make_it_go_90(kulka):
+  sleep_time = 1
+
+  kulka.roll(SPEED, 90)
+  time.sleep(sleep_time)
+def make_it_go_1(kulka):
+  sleep_time = 1
+
+  kulka.roll(SPEED, 1)
+  time.sleep(sleep_time)
+def make_it_go_180(kulka):
+  sleep_time = 1
+
+  kulka.roll(SPEED, 180)
+  time.sleep(sleep_time)
+def make_it_go_270(kulka):
+  sleep_time = 1
+
+  kulka.roll(SPEED, 270)
+  time.sleep(sleep_time)
+
+  kulka.roll(0, 0)
 def process_emg(emg):
   if(isReadyToRegisterData):
     #print("readings-> ", emg)
@@ -71,7 +100,8 @@ def func1(labelPredXD):
       #print(labelPredXD.value)
       if(labelPredXD.value == 1):
         print ('Do something')
-        make_a_circle(kulka,STEPS)
+        #make_a_circle(kulka,STEPS)
+        make_it_go_1(kulka)
       elif(labelPredXD.value == 0):
         print ('Do nothing')
 
