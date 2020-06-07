@@ -10,7 +10,7 @@ dataRecollectedPerIteration = list()
 
 ADDR = '68:86:e7:00:ef:40'
 #interpreter = tf.lite.Interpreter(model_path="myLittleModel.tflite")
-interpreter = tf.lite.Interpreter(model_path="modelXDXD.tflite")
+interpreter = tf.lite.Interpreter(model_path="model2.tflite")
 interpreter.allocate_tensors()
 
 # Get input and output tensors.
@@ -98,11 +98,16 @@ def func1(labelPredXD):
   with Kulka(ADDR) as kulka:
     while(True):
       #print(labelPredXD.value)
-      if(labelPredXD.value == 1):
+      if(labelPredXD.value == 3):
         print ('Do something')
-        #make_a_circle(kulka,STEPS)
         make_it_go_1(kulka)
-      elif(labelPredXD.value == 0):
+      elif(labelPredXD.value == 2):
+        print ('spread')
+        make_it_go_180(kulka)
+      elif(labelPredXD.value == 1):
+        print ('dance')
+        make_it_dance(kulka)
+      else:
         print ('Do nothing')
 
 def readAndClassify(samplesPerGesture):
