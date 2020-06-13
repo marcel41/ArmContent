@@ -8,7 +8,7 @@ dataRecollectedPerIteration = list()
 #-------------------------------------------------------------------------------
 def process_emg(emg):
   if(isReadyToRegisterData):
-    print("readings-> ", emg)
+    print("reading-> ", emg)
     global dataRecollectedPerIteration
     dataRecollectedPerIteration += emg
     global samplesPerSeconds
